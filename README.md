@@ -1,10 +1,10 @@
-# <code-TeX>
-> code-TeX a source code web component
+# code-TeX
+> A source code web component
 
 Need to present your source code on the web? `code-TeX` has got you covered.
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/auzmartist/code-tex/build/out/code-tex.min.js">
+<script src="https://cdn.jsdelivr.net/gh/auzmartist/code-tex/dist/code-tex.min.js"></script>
 
 <code-tex lang="javascript" theme="nord" source="console.log('hello code-TeX')" />
 ```
