@@ -1,6 +1,11 @@
 # code-TeX
 > A source code web component
 
+[![npm version](https://badge.fury.io/js/code-tex.svg)](https://badge.fury.io/js/code-tex)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/code-tex)
+
+
+
 Need to present your source code on the web? `code-TeX` has got you covered.
 
 ```html
@@ -16,19 +21,19 @@ All [highlight.js](https://highlightjs.org/) languages and nearly all themes are
 If in doubt, `code-tex` will print out all available options with the `help` attribute.
 
 ### help
-> Prints all supported languages and themes to the browser console
+Prints all supported languages and themes to the browser console
 ```html
 <code-tex help />
 ```
 
 ### language
-> Sets the code-tex language
+Sets the code-tex language
 ```html
 <code-tex language="javascript" />
 ```
 
 ### source
-> The source code to render as a string
+The source code to render as a string
 ```html
 <code-tex language="c++" source='
   #include <iostream>
@@ -41,19 +46,19 @@ If in doubt, `code-tex` will print out all available options with the `help` att
 ```
 
 ### src
-> The URL from which to load the source code
+The URL from which to load the source code
 ```html
 <code-tex language="html" src="https://www.spacejam.com/index.html" />
 ```
 
 ### theme
-> Sets the code-tex theme
+Sets the code-tex theme
 ```html
 <code-tex theme="monokai">
 ```
 
 ### transparent
-> Makes the code background transparent
+Makes the code background transparent
 ```html
 <code-tex transparent />
 ```
