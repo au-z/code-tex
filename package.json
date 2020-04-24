@@ -1,6 +1,6 @@
 {
   "name": "code-tex",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A tiny web component for displaying and sharing code",
   "main": "index.js",
   "scripts": {
