@@ -1,6 +1,8 @@
-import { define, html, property } from 'hybrids'
-import hljs from 'highlight.js'
+import { define, html, Hybrids, property } from 'hybrids'
+import {CamBox} from '@auzmartist/cam-el'
+const camBox = CamBox
 
+import hljs from 'highlight.js'
 import './languages'
 import themes, {THEME_CODES} from './themes'
 
@@ -30,40 +32,74 @@ function printHelp() {
 <code-tex
   lang="${hljs.listLanguages().join(' | ')}"\n
   theme="${THEME_CODES.join(' | ')}"\n
-  source="console.log('hello code-tex')"
+  source="console.log('hello code-TeX')"
 />`)
 }
 
-define('code-tex', {
+const CodeTeX: Hybrids<any> = {
   lang: 'js',
   theme: 'nord',
+  p: 2,
   src: '',
   source: '',
   transparent: false,
   help: {
     ...property(false),
-    observe: (host, value) => !!value && printHelp()
+    observe: (_, value) => value && printHelp()
   },
 
   format: ({src, source, lang}) => src ?
     fetchSrc(src).then((source) => formatCode(source, lang)) :
       source ? Promise.resolve(formatCode(source, lang)) : Promise.resolve(''),
 
-  styles: ({theme}) => themes(theme, 'nord'),
-
-  render: ({format, lang, styles, transparent}) => html.resolve(format.then((formatted) => html`
-    <pre class="code">
-      <code class="hljs ${lang}" innerHTML="${formatted}" part="code"></code>
-    </pre>
-    <style>
-@import url('https://cdn.jsdelivr.net/npm/firacode@3.1.0/distr/fira_code.min.css');
-
-code.hljs {
-  font-family: 'Fira Code', 'Consolas', monospace;
-  ${transparent && `background: transparent;`}
+  render: ({format, lang, theme, p, transparent}) => html.resolve(format.then((formatted) => html`
+    <cam-box>
+      <cam-box flex="space-between center" m="1" class="lang-theme">
+        <cam-box p="1">${lang}</cam-box>
+        <cam-box p="1">${theme}</cam-box>
+      </cam-box>
+      <pre class="code"><code class="hljs ${lang}" innerHTML="${formatted}" part="code"></code></pre>
+    </cam-box>
+    ${styles({p, transparent})}`.style(themes(theme, 'nord').toString())
+  )),
 }
 
-${styles.toString()}
-    </style>
-  `)),
-})
+function styles({p, transparent}) {
+  return html`<style>
+    @import url('https://cdn.jsdelivr.net/npm/firacode@3.1.0/distr/fira_code.min.css');
+
+    :host {
+      display: block;
+    }
+
+    cam-box {
+      position: relative;
+    }
+
+    .lang-theme {
+      position: absolute;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.75em;
+      border: 2px solid rgba(200, 200, 200, 0.5);
+      border-radius: 6px;
+      color: #aaa;
+      right: 0;
+    }
+    .lang-theme > cam-box:not(:first-child) {
+      border-left: 1px solid rgba(200, 200, 200, 0.5);
+    }
+
+    pre {
+      margin: 0;
+    }
+
+    code.hljs {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      padding: calc(var(--cam-unit, 8px) * ${p});
+      ${transparent && `background: transparent;`}
+    }
+  </style>`
+}
+
+define('code-tex', CodeTeX)
+export default CodeTeX
