@@ -57,7 +57,7 @@ const CodeTeX: Hybrids<any> = {
 
   render: ({format, lang, theme, p, transparent}) => html.resolve(format.then((formatted) => html`
     <cam-box>
-      <cam-box flex="space-between center" m="1" class="lang-theme">
+      <cam-box part="lang-theme" flex="space-between center" m="1" class="lang-theme">
         <cam-box p="1">${lang}</cam-box>
         <cam-box p="1">${theme}</cam-box>
       </cam-box>
@@ -81,12 +81,13 @@ function styles({p, transparent}) {
 
     .lang-theme {
       position: absolute;
+      right: 0;
       font-family: 'Fira Code', 'Consolas', monospace;
       font-size: 0.75em;
+      line-height: 1rem;
       border: 2px solid rgba(200, 200, 200, 0.5);
       border-radius: 6px;
       color: #aaa;
-      right: 0;
     }
     .lang-theme > cam-box:not(:first-child) {
       border-left: 1px solid rgba(200, 200, 200, 0.5);
