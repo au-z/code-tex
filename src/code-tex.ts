@@ -1,6 +1,9 @@
 import { define, html, Hybrids, property } from 'hybrids'
-import {CamBox} from '@auzmartist/cam-el'
-const camBox = CamBox
+if(!customElements.get('cam-box')) {
+  require('@auzmartist/cam-el').CamBox
+} else {
+  console.info('dependent element <cam-box> already defined.')
+}
 
 import hljs from 'highlight.js'
 import './languages'
