@@ -1,19 +1,21 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin')
 
 const resolve = (rel) => path.resolve(__dirname, '..', rel)
 
 const load = (test, ...use) => ({test, use, exclude: /node_modules/})
 
 module.exports = (env) => ({
-	mode: env.prod ? 'production' : 'development',
-	devtool: env.prod ? 'cheap-eval-source-map' : 'source-map',
-	entry: resolve('src/code-tex.ts'),
+	mode: (env.prod || env.es) ? 'production' : 'development',
+	entry: {
+		'code-tex': resolve('src/code-tex.ts'),
+	},
 	output: {
 		path: resolve('dist'),
-		filename: env.prod ? `code-tex.min.js` : `code-tex.js`,
-		library: `code-tex`,
-		libraryTarget: 'umd',
+		filename: (env.prod || env.es) ? `[name].${env.es ? 'es' : 'min'}.js` : `[name].js`,
+		library: `CodeTex`,
+		libraryTarget: env.es ? 'var' : 'umd',
 	},
 	module: {
 		rules: [
@@ -34,6 +36,7 @@ module.exports = (env) => ({
 		},
 	},
 	plugins: [
+		env.esm ? new EsmWebpackPlugin() : {apply: () => null},
 		env.dev ? new HtmlWebpackPlugin({
 			template: resolve('build/template.html'),
 			inject: 'head',
