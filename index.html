@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="./src/code-tex.ts"></script>
+    <title>code-tex</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      code-tex:not(:first-child) {
+        margin: 12px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <code-tex
+      lang="js"
+      theme="nord"
+      src="https://raw.githubusercontent.com/auzmartist/vue-hybrids/master/babel.config.js"
+      help
+    ></code-tex>
+
+    <code-tex
+      lang="rust"
+      theme="darkula"
+      src="https://raw.githubusercontent.com/auzmartist/rs-raytrace/master/src/rt/ray.rs"
+    ></code-tex>
+
+    <code-tex
+      lang="glsl"
+      theme="atelier-savanna-light"
+      src="https://gist.githubusercontent.com/kenpower/4327014/raw/a104fb07e6a0114a7216b3bca10964aa08d157b4/vertex.glsl"
+    ></code-tex>
+  </body>
+</html>

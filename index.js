@@ -1,1 +1,0 @@
-module.exports = require('./dist/code-tex.min.js')

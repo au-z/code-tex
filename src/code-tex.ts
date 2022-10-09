@@ -1,20 +1,15 @@
-import { define, html, Hybrids, property } from 'hybrids'
-if(!customElements.get('cam-box')) {
-  require('@auzmartist/cam-el').CamBox
-} else {
-  console.info('dependent element <cam-box> already defined.')
-}
-
+import { define, html } from 'hybrids'
 import hljs from 'highlight.js'
 import './languages'
-import themes, {THEME_CODES} from './themes'
+import themes, { CodeTexTheme, THEME_CODES } from './themes.js'
+import { CodeTexLanguage } from './languages.js'
 
 const escapeMap = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#39;"
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
 }
 
 const escapeForHTML = (input) => input.replace(/([&<>'"])/g, (char) => escapeMap[char])
@@ -24,10 +19,11 @@ const formatCode = (code, lang) => {
   return supportedLang ? hljs.highlight(lang, code).value : escapeForHTML(code)
 }
 
-const fetchSrc = (src) => fetch(src).then((r) => {
-  if(!r.ok) throw new Error(r.statusText)
-  return r.text()
-})
+const fetchSrc = (src) =>
+  fetch(src).then((r) => {
+    if (!r.ok) throw new Error(r.statusText)
+    return r.text()
+  })
 
 function printHelp() {
   console.log(`
@@ -39,35 +35,52 @@ function printHelp() {
 />`)
 }
 
-const CodeTeX: Hybrids<any> = {
-  lang: 'js',
+export interface CodeTexElement extends HTMLElement {
+  lang: CodeTexLanguage
+  theme: CodeTexTheme
+  p: number
+  src: string
+  source: string
+  transparent: boolean
+  help: boolean
+  //
+  format: Promise<string>
+}
+
+export default define<CodeTexElement>({
+  tag: 'code-tex',
+  // overrides HTMLElement.lang
+  // TODO port to 'language' to prevent unexpected behavior
+  lang: 'javascript',
   theme: 'nord',
   p: 2,
   src: '',
   source: '',
   transparent: false,
   help: {
-    ...property(false),
-    observe: (_, value) => value && printHelp()
+    value: false,
+    observe: (_, value) => value && printHelp(),
   },
 
-  format: ({src, source, lang}) => src ?
-    fetchSrc(src).then((source) => formatCode(source, lang)) :
-      source ? Promise.resolve(formatCode(source, lang)) : Promise.resolve(''),
+  format: ({ src, source, lang }) =>
+    src
+      ? fetchSrc(src).then((source) => formatCode(source, lang))
+      : source
+      ? Promise.resolve(formatCode(source, lang))
+      : Promise.resolve(''),
 
-  render: ({format, lang, theme, p, transparent}) => html.resolve(format.then((formatted) => html`
-    <cam-box>
-      <cam-box part="lang-theme" flex="space-between center" m="1" class="lang-theme">
-        <cam-box p="1">${lang}</cam-box>
-        <cam-box p="1">${theme}</cam-box>
-      </cam-box>
-      <pre class="code"><code class="hljs ${lang}" innerHTML="${formatted}" part="code"></code></pre>
-    </cam-box>
-    ${styles({p, transparent})}`.style(themes(theme, 'nord').toString())
+  // prettier-ignore
+  render: ({ format, lang, theme, p, transparent }) => html.resolve(format.then((formatted) => html`
+    <div part="lang-theme" class="lang-theme">
+      <label style="padding: 8px">${lang}</label>
+      <label style="padding: 8px">${theme}</label>
+    </div>
+    <pre class="code"><code class="hljs ${lang}" innerHTML="${formatted}" part="code"></code></pre>
+    ${styles({ p, transparent })}`.style(themes(theme, "nord"))
   )),
-}
+})
 
-function styles({p, transparent}) {
+function styles({ p, transparent }) {
   return html`<style>
     @import url('https://cdn.jsdelivr.net/npm/firacode@3.1.0/distr/fira_code.min.css');
 
@@ -75,21 +88,21 @@ function styles({p, transparent}) {
       display: block;
     }
 
-    cam-box {
-      position: relative;
-    }
-
     .lang-theme {
       position: absolute;
+      margin: 0.5rem;
       right: 0;
       font-family: 'Fira Code', 'Consolas', monospace;
-      font-size: 0.75em;
+      font-size: 0.7em;
       line-height: 1rem;
       border: 2px solid rgba(200, 200, 200, 0.5);
       border-radius: 6px;
       color: #aaa;
     }
-    .lang-theme > cam-box:not(:first-child) {
+    .lang-theme > label {
+      display: inline-block;
+    }
+    .lang-theme > label:not(:first-child) {
       border-left: 1px solid rgba(200, 200, 200, 0.5);
     }
 
@@ -104,6 +117,3 @@ function styles({p, transparent}) {
     }
   </style>`
 }
-
-define('code-tex', CodeTeX)
-export default CodeTeX

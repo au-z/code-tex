@@ -1,16 +1,20 @@
 {
   "name": "code-tex",
-  "version": "0.2.0",
-  "description": "A tiny web component for displaying and sharing code",
-  "main": "index.js",
+  "version": "1.0.0",
+  "description": "A tiny web component for displaying and sharing code.",
+  "type": "module",
+  "main": "dist/code-tex.js",
+  "module": "dist/code-tex.js",
+  "exports": {
+    ".": "./dist/code-tex.js"
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "webpack --env.prod --config ./build/webpack.config.js --progress --hide-modules",
-    "build:es": "webpack --env.es --config ./build/webpack.config.js --progress --hide-modules",
-    "dev": "webpack-dev-server --env.dev --config ./build/webpack.config.js --open --hot --quiet",
-    "prepublishOnly": "npx concurrently \"npm run build\" \"npm run build:es\""
+    "dev": "vite",
+    "build": "vite build",
+    "prepublishOnly": "npx concurrently \"npm run build\""
   },
   "repository": {
     "type": "git",
@@ -28,28 +32,15 @@
     "url": "https://github.com/auzmartist/code-tex/issues"
   },
   "homepage": "https://github.com/auzmartist/code-tex#readme",
+  "dependencies": {
+    "@auzmartist/hybrids-helpers": "0.2.1",
+    "hybrids": "^8.1.5",
+    "highlight.js": "^10.4.1"
+  },
   "devDependencies": {
-    "@auzmartist/cam-el": "^0.2.0",
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.8.7",
-    "@babel/preset-typescript": "^7.8.3",
-    "@babel/register": "^7.9.0",
-    "@purtuga/esm-webpack-plugin": "^1.5.0",
-    "babel-eslint": "^8.2.6",
-    "babel-loader": "^8.1.0",
-    "copy-webpack-plugin": "^5.1.1",
-    "core-js": "^3.6.5",
-    "css-loader": "^3.5.2",
-    "highlight.js": "^10.4.1",
-    "html-webpack-plugin": "^4.0.3",
-    "hybrids": "^4.1.7",
-    "style-loader": "^1.1.3",
-    "stylus": "^0.54.7",
-    "stylus-loader": "^3.0.2",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "typescript": "^4.8.4",
+    "rollup-plugin-css-hmr": "^0.3.4",
+    "vite": "^3.1.6",
+    "vitest": "^0.24.0"
   }
 }

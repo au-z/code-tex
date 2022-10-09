@@ -1,15 +1,31 @@
 # code-TeX
+
 > A source code web component
 
 [![npm version](https://badge.fury.io/js/code-tex.svg)](https://badge.fury.io/js/code-tex)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/code-tex)
 
+Need to present your source code on the web? `code-tex` has got you covered.
 
+## Get Started
 
-Need to present your source code on the web? `code-TeX` has got you covered.
+Install with a package manager:
+
+```bash
+npm install --save code-tex
+```
+
+```ts
+import 'code-tex'
+```
+
+**OR** Import from a CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/auzmartist/code-tex/dist/code-tex.min.js"></script>
+<!-- LOCAL -->
+<script type="module" src="node_modules/code-tex/dist/code-tex.js"></script>
+<!-- CDN -->
+<script type="module" src="https://cdn.jsdelivr.net/gh/auzmartist/code-tex/dist/code-tex.js"></script>
 
 <code-tex lang="javascript" theme="nord" source="console.log('hello code-TeX')" />
 ```
@@ -17,55 +33,73 @@ Need to present your source code on the web? `code-TeX` has got you covered.
 ![](https://i.imgur.com/rg61Z7h.png)
 
 ## API
+
 All [highlight.js](https://highlightjs.org/) languages and nearly all themes are supported.
 If in doubt, `code-tex` will print out all available options with the `help` attribute.
 
 ### help
+
 Prints all supported languages and themes to the browser console
+
 ```html
 <code-tex help />
 ```
 
 ### language
+
 Sets the code-tex language
+
 ```html
 <code-tex language="javascript" />
 ```
 
 ### source
+
 The source code to render as a string
+
 ```html
-<code-tex language="c++" source='
+<code-tex
+  language="c++"
+  source='
   #include <iostream>
 
   int main() {
     std::cout << "Hello code-TeX!";
     return 0;
   }
-' />
+'
+/>
 ```
 
 ### src
+
 The URL from which to load the source code
+
 ```html
 <code-tex language="html" src="https://www.spacejam.com/index.html" />
 ```
 
 ### theme
+
 Sets the code-tex theme
+
 ```html
-<code-tex theme="monokai">
+<code-tex theme="monokai"></code-tex>
 ```
 
 ### transparent
+
 Makes the code background transparent
+
 ```html
 <code-tex transparent />
 ```
 
 ## Styling
+
 code-TeX already offers rich syntax highlighting and themes, all rendered in the Fira Code ligature-enabled font. But if you've got something else in mind, you can edit the `code` element with the `::part(code)` selection modifier:
 
+<!-- prettier-ignore -->
 ```css
 code-tex::part(code) {
   background:
@@ -87,4 +121,3 @@ code-tex::part(code) {
 ![](https://i.imgur.com/XEU4Aef.png)
 
 Just remember to CSS responsibly...
-
