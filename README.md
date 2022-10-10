@@ -21,13 +21,16 @@ import 'code-tex'
 
 **OR** Import from a CDN
 
+<!-- prettier-ignore -->
 ```html
 <!-- LOCAL -->
 <script type="module" src="node_modules/code-tex/dist/code-tex.js"></script>
 <!-- CDN -->
 <script type="module" src="https://cdn.jsdelivr.net/gh/auzmartist/code-tex/dist/code-tex.js"></script>
 
-<code-tex lang="javascript" theme="nord" source="console.log('hello code-TeX')" />
+<code-tex lang="javascript" theme="nord">
+  console.log('hello code-TeX')
+</code-tex>
 ```
 
 ![](https://i.imgur.com/rg61Z7h.png)
@@ -42,7 +45,7 @@ If in doubt, `code-tex` will print out all available options with the `help` att
 Prints all supported languages and themes to the browser console
 
 ```html
-<code-tex help />
+<code-tex help></code-tex>
 ```
 
 ### language
@@ -50,16 +53,18 @@ Prints all supported languages and themes to the browser console
 Sets the code-tex language
 
 ```html
-<code-tex language="javascript" />
+<code-tex language="javascript"></code-tex>
 ```
 
 ### source
 
-The source code to render as a string
+The source code to render as a string.
+Preferrably, slot the source code directly inside the element.
 
+<!-- prettier-ignore -->
 ```html
 <code-tex
-  language="c++"
+  language="cpp"
   source='
   #include <iostream>
 
@@ -68,15 +73,28 @@ The source code to render as a string
     return 0;
   }
 '
-/>
+></code-tex>
+
+<!-- OR -->
+
+<code-tex language="cpp">
+#include &lt;iostream&gt;
+
+int main() {
+  std::cout &lt;&lt; "Hello code-TeX!";
+  return 0;
+}
+</code-tex>
 ```
+
+**Pro Tip:** You may need to HTML encode certain characters like above. (`<<` -> `&lt;&lt;`)
 
 ### src
 
 The URL from which to load the source code
 
 ```html
-<code-tex language="html" src="https://www.spacejam.com/index.html" />
+<code-tex language="html" src="https://www.spacejam.com/index.html"></code-tex>
 ```
 
 ### theme
@@ -89,11 +107,17 @@ Sets the code-tex theme
 
 ### transparent
 
-Makes the code background transparent
+Makes the code background transparent.
 
 ```html
-<code-tex transparent />
+<code-tex transparent></code-tex>
 ```
+
+### preserveSpaces
+
+`code-tex` automatically formats slotted text content, assuming you'd like to remove any preceding spaces from all lines as in the first line.
+
+To turn this off, set the `preserve-spaces` attribute.
 
 ## Styling
 

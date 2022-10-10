@@ -11,28 +11,59 @@
         margin: 0;
         padding: 0;
       }
+      code-tex {
+        transition: opacity 0.2s ease-out;
+      }
+      code-tex:not(:defined) {
+        opacity: 0;
+      }
       code-tex:not(:first-child) {
         margin: 12px 0;
       }
     </style>
   </head>
   <body>
+    <code-tex theme="hopscotch">
+      fetch('/api/to/path', {
+        method: 'POST',
+      }).then((res) => {
+        if(!res.ok) throw new Error(`can't right now lol`)
+        return parse(res?.data)
+      })
+    </code-tex>
+
+    <code-tex language="html" theme="ocean">
+      <div>
+        <my-component attr="foobar">
+          <my-child-component onevent="${dosomething}"></my-child-component>
+        </my-component>
+      </div>
+    </code-tex>
+
+    <code-tex language="cpp" theme="zenburn" source='#include <iostream>
+
+int main() {
+  std::cout &lt;&lt; "Hello code-TeX!";
+  return 0;
+}'>
+    </code-tex>
+
     <code-tex
-      lang="js"
+      language="javascript"
       theme="nord"
       src="https://raw.githubusercontent.com/auzmartist/vue-hybrids/master/babel.config.js"
       help
     ></code-tex>
 
     <code-tex
-      lang="rust"
-      theme="darkula"
+      language="rust"
+      theme="atelier-forest-dark"
       src="https://raw.githubusercontent.com/auzmartist/rs-raytrace/master/src/rt/ray.rs"
     ></code-tex>
 
     <code-tex
-      lang="glsl"
-      theme="atelier-savanna-light"
+      language="glsl"
+      theme="tomorrow-night"
       src="https://gist.githubusercontent.com/kenpower/4327014/raw/a104fb07e6a0114a7216b3bca10964aa08d157b4/vertex.glsl"
     ></code-tex>
   </body>

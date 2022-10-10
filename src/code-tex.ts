@@ -14,7 +14,20 @@ const escapeMap = {
 
 const escapeForHTML = (input) => input.replace(/([&<>'"])/g, (char) => escapeMap[char])
 
-const formatCode = (code, lang) => {
+const formatCode = (code, lang, options?: { decode?: boolean; untab?: boolean }) => {
+  if (options?.decode) {
+    const decoded = document.createElement('textarea')
+    decoded.innerHTML = code
+    code = decoded.value
+  }
+  if (options?.untab) {
+    try {
+      const lines = code.split('\n').filter((l) => l.length > 0)
+      const count = lines[0].match(/^\s*/)?.[0]?.length ?? 0
+      code = lines.map((l) => l.replace(new RegExp(`^\\s{${count}}`, ''), '')).join('\n')
+    } catch (ex) {}
+  }
+
   const supportedLang = !!(lang && hljs.getLanguage(lang))
   return supportedLang ? hljs.highlight(lang, code).value : escapeForHTML(code)
 }
@@ -36,12 +49,13 @@ function printHelp() {
 }
 
 export interface CodeTexElement extends HTMLElement {
-  lang: CodeTexLanguage
+  language: CodeTexLanguage
   theme: CodeTexTheme
   p: number
   src: string
   source: string
   transparent: boolean
+  preserveSpaces: boolean
   help: boolean
   //
   format: Promise<string>
@@ -50,34 +64,45 @@ export interface CodeTexElement extends HTMLElement {
 export default define<CodeTexElement>({
   tag: 'code-tex',
   // overrides HTMLElement.lang
-  // TODO port to 'language' to prevent unexpected behavior
-  lang: 'javascript',
+  lang: {
+    set: (host, val = '') => {
+      if (val) console.warn('<code-tex> use of deprecated "lang" property in >=1.1.0. Please use "language" instead.')
+      host.language = val
+      return val
+    },
+  },
+  language: 'javascript',
   theme: 'nord',
   p: 2,
   src: '',
   source: '',
   transparent: false,
+  preserveSpaces: false,
   help: {
     value: false,
     observe: (_, value) => value && printHelp(),
   },
 
-  format: ({ src, source, lang }) =>
+  format: ({ src, source, language }) =>
     src
-      ? fetchSrc(src).then((source) => formatCode(source, lang))
+      ? fetchSrc(src).then((source) => formatCode(source, language))
       : source
-      ? Promise.resolve(formatCode(source, lang))
+      ? Promise.resolve(formatCode(source, language))
       : Promise.resolve(''),
 
   // prettier-ignore
-  render: ({ format, lang, theme, p, transparent }) => html.resolve(format.then((formatted) => html`
+  render: (host) => html`
     <div part="lang-theme" class="lang-theme">
-      <label style="padding: 8px">${lang}</label>
-      <label style="padding: 8px">${theme}</label>
+      <label style="padding: 8px">${host.language}</label>
+      <label style="padding: 8px">${host.theme}</label>
     </div>
-    <pre class="code"><code class="hljs ${lang}" innerHTML="${formatted}" part="code"></code></pre>
-    ${styles({ p, transparent })}`.style(themes(theme, "nord"))
-  )),
+    <pre class="code">${host.src || host.source ? html.resolve(host.format
+      .then((formatted) => html`<code class="hljs ${host.language}" innerHTML="${formatted}" part="code"></code>`)
+    ) : html`<code class="hljs ${host.language}" part="code" innerHTML="${formatCode(host.innerHTML, host.language, {
+      decode: true,
+      untab: !host.preserveSpaces,
+    })}"></code>`}</pre>
+    ${styles({ p: host.p, transparent: host.transparent })}`.style(themes(host.theme, "nord")),
 })
 
 function styles({ p, transparent }) {
